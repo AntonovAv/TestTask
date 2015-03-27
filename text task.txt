@@ -1,0 +1,39 @@
+Тестовое задание заключается в разработке web-приложение на платформе Java 8
+
+Результат работы должен включать:
+                - архив с исходным кодом
+                - архив для развертывания в сервер приложений (.war)
+
+Требования для приложения UserManagement
+
+Domain:
+∙ User {id, firsname, lastname, username, password, email, birthday, isActive, createTS, lastUpdateTS}
+∙ Address {zip, country, city, district, street}
+∙ Group – e.g. managers, developers, testers
+
+Backend:
+∙ Restful service with CRUD functionality and passivate/activate operation.
+∙ In case passivate user state update should return error
+∙ Bean validation on service level
+∙ Persistence with JPA
+∙ Search for firsname, lastname, email, birthday
+
+Build
+∙ Maven
+
+Testing
+∙ Unit tests
+∙ Db test with in memory db
+
+Optional:
+Frontend – any web or JS framework
+∙ Group tree
+∙ List of users
+∙ Address view aside of users list with update on user selection
+∙ CRUD screens
+∙ Search
+∙ Filtering list of users
+∙ Passivation/activation operation with confirmation dialog
+∙ Form validation
+∙ All communication with backend by REST
+
