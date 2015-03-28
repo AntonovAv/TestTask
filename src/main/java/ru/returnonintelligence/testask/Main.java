@@ -1,7 +1,8 @@
 package ru.returnonintelligence.testask;
 
-/**
- * Created by Ant on 27.03.2015.
- */
-public class Main {
-}
+import ru.returnonintelligence.testask.beans.UserBean;
+import ru.returnonintelligence.testask.entities.User;
+
+import javax.ejb.EJB;
+import java.sql.Date;
+
