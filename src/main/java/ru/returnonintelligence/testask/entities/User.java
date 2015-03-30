@@ -1,6 +1,9 @@
 package ru.returnonintelligence.testask.entities;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.sql.Date;
 import java.sql.Timestamp;
 
@@ -11,22 +14,53 @@ import java.sql.Timestamp;
  */
 @Entity
 @Table(name = "users")
+@NamedQueries({
+        @NamedQuery(name = "User.findByUserData",
+                query = "SELECT u FROM User u WHERE u.firstName = :firstName AND " +
+                        "u.lastName = :lastName AND u.email = :email AND u.birthday = :birthday"),
+        @NamedQuery(name = "User.getAllUsers",
+                query = "SELECT u FROM User u")
+})
+
 public class User {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id", nullable = false)
     private Long id;
+
+    @NotNull(message = "User should have a fname")
+    @Size(min = 3, max = 40, message = "User's fname from 3 to 40 characters")
+    @Pattern(regexp = "^[a-zA-Z]+$", message = "Use only a-zA-Z characters")
     @Column(name = "firstName", nullable = false)
     private String firstName;
+
+    @NotNull(message = "User should have a lname")
+    @Size(min = 3, max = 40, message = "User's lname from 3 to 40 characters")
+    @Pattern(regexp = "^[a-zA-Z]+$", message = "Use only a-zA-Z characters")
     @Column(name = "lastName", nullable = false)
     private String lastName;
+
+    @NotNull(message = "User should have a userName")
+    @Size(min = 3, max = 40, message = "User's userName from 3 to 40 characters")
+    @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Use only a-zA-Z0-9 characters")
     @Column(name = "userName", nullable = false)
     private String userName;
+
+    @NotNull(message = "User should have a password")
+    @Size(min = 3, max = 40, message = "User's password from 3 to 40 characters")
+    @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Use only a-zA-Z0-9 characters")
     @Column(name = "userPassword", nullable = false)
     private String userPassword;
+
+    @NotNull(message = "User should have a email")
+    @Size(min = 3, max = 40, message = "User's email from 3 to 40 characters")
+    @Pattern(regexp = "^[\\w\\.-_\\+]+@[\\w-]+(\\.\\w{2,4})+$", message = "Incorrect type of email")
     @Column(name = "email", nullable = false)
     private String email;
+
+    @NotNull(message = "User should have a birthday")
     @Column(name = "birthday")
    // @Temporal(TemporalType.DATE)
     private Date birthday;
@@ -38,12 +72,14 @@ public class User {
     @Column(name = "lastUpdateTs", nullable = false)
   //  @Temporal(TemporalType.TIMESTAMP)
     private Timestamp lastUpdateTs;
+
+    @NotNull(message = "User should have a group")
     @ManyToOne
-  //  @JoinColumn(name = "group_id", nullable = false)
-    @JoinColumn(name = "group_id", nullable = true)
+    @JoinColumn(name = "group_id", nullable = false)
     private Group group;
-    @ManyToOne
-   // @JoinColumn(name = "address_id", nullable = false)
+
+    @NotNull(message = "User should have a address")
+    @OneToOne(orphanRemoval = true)
     @JoinColumn(name = "address_id", nullable = true)
     private Address address;
 
@@ -51,11 +87,11 @@ public class User {
     }
 
     public User(String firstName, String lastName, String userName, String userPassword, String email, Date birthday, Boolean active, Timestamp createTS, Timestamp lastUpdateTs, Group group, Address address) {
-        this.firstName = firstName;
+        this.firstName = firstName.toLowerCase();
         this.userName = userName;
-        this.lastName = lastName;
+        this.lastName = lastName.toLowerCase();
         this.userPassword = userPassword;
-        this.email = email;
+        this.email = email.toLowerCase();
         this.birthday = birthday;
         this.active = active;
         this.createTS = createTS;
@@ -65,11 +101,11 @@ public class User {
     }
 
     public User(String firstName, String lastName, String userName, String userPassword, String email, Date birthday, Group group, Address address) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.firstName = firstName.toLowerCase();
+        this.lastName = lastName.toLowerCase();
         this.userName = userName;
         this.userPassword = userPassword;
-        this.email = email;
+        this.email = email.toLowerCase();
         this.birthday = birthday;
         this.group = group;
         this.address = address;
@@ -88,7 +124,7 @@ public class User {
     }
 
     public void setFirstName(String firstName) {
-        this.firstName = firstName;
+        this.firstName = firstName.toLowerCase();
     }
 
     public Address getAddress() {
@@ -144,7 +180,7 @@ public class User {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.email = email.toLowerCase();
     }
 
     public String getUserPassword() {
@@ -164,7 +200,7 @@ public class User {
     }
 
     public String getLastName() {
-        return lastName;
+        return lastName.toLowerCase();
     }
 
     public void setLastName(String lastName) {
@@ -188,4 +224,5 @@ public class User {
                 ", address=" + address +
                 '}';
     }
+
 }
