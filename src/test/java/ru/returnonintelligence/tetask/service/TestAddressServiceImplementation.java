@@ -1,4 +1,4 @@
-package returnonintelligence.testask.service;
+package ru.returnonintelligence.tetask.service;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -26,42 +26,40 @@ public class TestAddressServiceImplementation {
     public void testCreateUpdateFindDeleteAddress(){
 
         Address addr = new Address("55555", "Country", "City", "District", "Street");
-        Long id = -1l;
         try {
-            id = as.create(addr);
+            addr = as.create(addr);
         } catch (ServiceException ex){
             ex.printStackTrace();
         }
-        Assert.assertNotEquals("Address not created", -1l, (long) id);
-        addr.setId(id);
+        Assert.assertNotNull("Address not created", addr);
+
         // find address
-        Address foundAddr = null;
         try {
-            foundAddr = as.find(addr);
+            addr = as.find(addr);
         } catch (ServiceException ex) {
             ex.printStackTrace();
         }
 
-        Assert.assertNotNull("Address not found", foundAddr);
+        Assert.assertNotNull("Address not found", addr);
 
         String newCountry = "New Contry";
-        foundAddr.setCountry(newCountry);
+        addr.setCountry(newCountry);
         try {
-            as.update(foundAddr);
+            as.update(addr);
         } catch(ServiceException ex) {
             ex.printStackTrace();
         }
         try {
-            foundAddr = as.find(foundAddr);
+            addr = as.find(addr);
         } catch (ServiceException ex) {
             ex.printStackTrace();
         }
-        Assert.assertEquals("Address not updated", newCountry, foundAddr.getCountry());
+        Assert.assertEquals("Address not updated", newCountry, addr.getCountry());
 
         //test delete
         Boolean delFlag = false;
         try{
-            delFlag = as.delete(foundAddr);
+            delFlag = as.delete(addr);
         } catch(ServiceException ex) {
             ex.printStackTrace();
         }

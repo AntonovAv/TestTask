@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface AddressService extends ValidateService {
 
-    public Long create(Address address) throws ServiceException;
+    public Address create(Address address) throws ServiceException;
     public List<Address> getAll();
     public Boolean delete(Address address) throws ServiceException;
     public Boolean update(Address address) throws ServiceException;

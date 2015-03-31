@@ -1,4 +1,4 @@
-package returnonintelligence.testask.service;
+package ru.returnonintelligence.tetask.service;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -36,16 +36,15 @@ public class TestGroupServiceImplementation {
         String grName2 = "managers";
         Group gr1 = new Group(grName1);
         Group gr2 = new Group(grName2);
-        Long id1 = -1l;
-        Long id2 = -1l;
+
         try {
-            id1 = gs.create(gr1);
-            id2 = gs.create(gr2);
+            gr1 = gs.create(gr1);
+            gr2 = gs.create(gr2);
         } catch (ServiceException sx) {
             sx.printStackTrace();
         }
-        Assert.assertNotEquals("Group 1 no created", -1l, (long) id1);
-        Assert.assertNotEquals("Group 2 no created", -1l, (long) id2);
+        Assert.assertNotNull("Group 1 no created", gr1);
+        Assert.assertNotNull("Group 2 no created", gr2);
         Group foundGroup1 = null;
         Group foundGroup2 = null;
         List<Group> fGr = gs.getAll();
@@ -120,7 +119,7 @@ public class TestGroupServiceImplementation {
         Assert.assertFalse("Group validation not work", gs.validate(gr));
         gr = new Group("w");
         Assert.assertFalse("Group validation not work", gs.validate(gr));
-        gr = new Group("adminsÔÔ");
+        gr = new Group("adminsï¿½ï¿½");
         Assert.assertFalse("Group validation not work", gs.validate(gr));
         gr = new Group("admins");
         Assert.assertTrue("Group validation not work", gs.validate(gr));

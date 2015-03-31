@@ -22,8 +22,14 @@ public class GroupServiceImplementation extends ValidateServiceImplementation im
         this.emf = emf;
     }
 
+    /**
+     * Create new group and return bean with created fields (detached)
+     * @param group
+     * @return
+     * @throws ServiceException
+     */
     @Override
-    public Long create(Group group) throws ServiceException {
+    public Group create(Group group) throws ServiceException {
         if (group == null) {
             throw new ServiceException("Group parameters for create are incorrect");
         }
@@ -35,10 +41,7 @@ public class GroupServiceImplementation extends ValidateServiceImplementation im
         Group gr = em.merge(group);
         em.getTransaction().commit();
         em.close();
-        if (gr == null) {
-            return -1l;
-        }
-        return gr.getId();
+        return gr;
     }
 
     /**

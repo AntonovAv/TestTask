@@ -22,8 +22,14 @@ public class AddressServiceImplementation extends ValidateServiceImplementation 
         this.emf = emf;
     }
 
+    /**
+     * Create addreess and return bean with created fields (detached)
+     * @param address
+     * @return
+     * @throws ServiceException
+     */
     @Override
-    public Long create(Address address) throws ServiceException {
+    public Address create(Address address) throws ServiceException {
         if (address == null) {
             throw new ServiceException("Addresses parameters for create are incorrect");
         }
@@ -32,13 +38,10 @@ public class AddressServiceImplementation extends ValidateServiceImplementation 
         }
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        Address gr = em.merge(address);
+        Address adr = em.merge(address);
         em.getTransaction().commit();
         em.close();
-        if (gr == null) {
-            return -1l;
-        }
-        return gr.getId();
+        return adr;
     }
 
     @Override

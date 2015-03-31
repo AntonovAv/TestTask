@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface UserService extends ValidateService {
 
-    public Long create(User user) throws ServiceException;
+    public User create(User user) throws ServiceException;
     public Boolean delete(User user) throws ServiceException;
     public User find(User user) throws ServiceException;
     public User findByPersonalData(User user)throws ServiceException;

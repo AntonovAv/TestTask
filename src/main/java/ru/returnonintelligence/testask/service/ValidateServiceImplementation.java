@@ -9,6 +9,8 @@ import java.util.Set;
 
 /**
  * Created by Anton on 29.03.2015.
+ * Implementation validate service.Check bean's fields
+ *
  */
 public class ValidateServiceImplementation implements ValidateService {
 

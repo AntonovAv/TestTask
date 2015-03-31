@@ -33,7 +33,7 @@ public class UserServiceImplementation extends ValidateServiceImplementation imp
      * @return -1 or id created user
      */
     @Override
-    public Long create(User user) throws ServiceException{
+    public User create(User user) throws ServiceException{
         if (user == null) {
             throw new ServiceException("User parameters for create are incorrect");
 
@@ -48,10 +48,7 @@ public class UserServiceImplementation extends ValidateServiceImplementation imp
         User us = em.merge(user);
         em.getTransaction().commit();
         em.close();
-        if (us == null) {
-            return -1l;
-        }
-        return us.getId();
+        return us;
     }
 
     /**
@@ -63,14 +60,14 @@ public class UserServiceImplementation extends ValidateServiceImplementation imp
     @Override
     public Boolean delete(User user) throws ServiceException{
         User usr;
-        try {
-            usr = findByPersonalData(user);
-        } catch (ServiceException ex) {
+        if (user == null || user.getId() == null) {
             throw new ServiceException("User not delete because user data is incorrect");
         }
+
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        em.remove(user.getId());
+        usr = em.find(User.class, user.getId());
+        em.remove(usr);
         em.getTransaction().commit();
         em.close();
         return true;
@@ -144,17 +141,21 @@ public class UserServiceImplementation extends ValidateServiceImplementation imp
      */
     @Override
     public Boolean update(User user) throws ServiceException {
-        if (user == null) {
-            throw new ServiceException("User for update not exist");
+        if (user == null || user.getId() == null) {
+            throw new ServiceException("User for update not exist or cannot be find");
         }
-        // if user not active
-        if (!user.getActive()) {
-            throw new ServiceException("User not updated because user is not active!");
-        }
+
         // set time last update
         user.setLastUpdateTs(new Timestamp(System.currentTimeMillis()));
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
+
+        // test user activity
+        User beforeUp = em.find(User.class, user.getId());
+        if (!beforeUp.getActive()) {
+            em.close();
+            throw new ServiceException("User not updated because user is not active!");
+        }
         User updtUser = em.merge(user);
         em.getTransaction().commit();
         em.close();
@@ -166,11 +167,11 @@ public class UserServiceImplementation extends ValidateServiceImplementation imp
     @Override
     public Boolean passivate(User user) throws ServiceException{
         if (user == null) {
-            throw new ServiceException("User not passivated because user not found");
+            throw new ServiceException("User not passivated because user not exist");
         }
         User usr = null;
         try {
-            user = findByPersonalData(user);
+            usr = findByPersonalData(user);
         } catch (ServiceException ex) {
             throw new ServiceException("User not found and not passivated");
         }
@@ -178,10 +179,10 @@ public class UserServiceImplementation extends ValidateServiceImplementation imp
             throw new ServiceException("User not found and not passivated");
         }
 
-        usr.setActive(true);
+        usr.setActive(false);
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        User updtUser = em.merge(user);
+        User updtUser = em.merge(usr);
         em.getTransaction().commit();
         em.close();
         if(updtUser == null) {
@@ -203,7 +204,7 @@ public class UserServiceImplementation extends ValidateServiceImplementation imp
         }
         User usr = null;
         try {
-            user = findByPersonalData(user);
+            usr = findByPersonalData(user);
         } catch (ServiceException ex) {
             throw new ServiceException("User not found and not activated");
         }
@@ -214,7 +215,7 @@ public class UserServiceImplementation extends ValidateServiceImplementation imp
         usr.setActive(true);
         EntityManager em = emf.createEntityManager();
         em.getTransaction().begin();
-        User updtUser = em.merge(user);
+        User updtUser = em.merge(usr);
         em.getTransaction().commit();
         em.close();
         if(updtUser == null) {
